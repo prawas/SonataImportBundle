@@ -30,15 +30,17 @@
                                     {{ 'index.table.name'|trans({}, 'DoctrsSonataImportBundle') }}
                                 </th>
                             </tr>
+                            {% set letter_i = 0 %}
                             {% for key, i in builder %}
                                 <tr>
                                     <td>
-                                        {{ letters[key] }}
+                                        {{ letters[letter_i] }}
                                     </td>
                                     <td>
-                                        {{ i }}
+                                        {{ key }}
                                     </td>
                                 </tr>
+                                {% set letter_i = letter_i + 1 %}
                             {% endfor %}
                         </table>
                         </div>

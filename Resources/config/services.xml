@@ -21,5 +21,8 @@
         </service>
         <service id="doctrs.type.entity" class="Doctrs\SonataImportBundle\Service\SonataImportType\EntityType">
         </service>
+        <service id="doctrs.command.import" class="Doctrs\SonataImportBundle\Command\SonataImportCommand" public="true">
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
