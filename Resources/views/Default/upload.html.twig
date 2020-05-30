@@ -27,7 +27,7 @@
 
         <script>
             $(document).ready(function(){
-                //interval();
+                interval();
             });
 
             function interval(){
@@ -93,23 +93,23 @@
 
                                     <div class="status">
                                         <a {{ app.request.get('type') == 'all' ? 'class="active"' : '' }}
-                                                href="?page={{ app.request.get('page', 1) }}&type=all">
+                                                href="?page=1&type=all">
                                             Все
                                         </a> |
                                         <a {{ app.request.get('type') == 'success' ? 'class="active"' : '' }}
-                                                href="?page={{ app.request.get('page', 1) }}&type=success">
+                                                href="?page=1&type=success">
                                             Успешно загруженные
                                         </a> |
                                         <a {{ app.request.get('type') == 'new' ? 'class="active"' : '' }}
-                                                href="?page={{ app.request.get('page', 1) }}&type=new">
+                                                href="?page=1&type=new">
                                             Новые
                                         </a> |
                                         <a {{ app.request.get('type') == 'update' ? 'class="active"' : '' }}
-                                                href="?page={{ app.request.get('page', 1) }}&type=update">
+                                                href="?page=1&type=update">
                                             Обновленные
                                         </a> |
                                         <a {{ app.request.get('type') == 'error' ? 'class="active"' : '' }}
-                                                href="?page={{ app.request.get('page', 1) }}&type=error">
+                                                href="?page=1&type=error">
                                             С ошибкой
                                         </a>
                                     </div>
