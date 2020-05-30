@@ -8,6 +8,8 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
 
 class CsvFileLoader implements FileLoaderInterface {
 
+    const BOM = "\xef\xbb\xbf";
+
     /** @var File $file  */
     protected $file = null;
 
@@ -22,7 +24,14 @@ class CsvFileLoader implements FileLoaderInterface {
         }
 
         $file = fopen($this->file->getRealPath(), 'r');
-        while (($line = fgetcsv($file, 0, ',')) !== false) {
+
+        // Progress file pointer and get first 3 characters to compare to the BOM string.
+        if (fgets($file, 4) !== self::BOM) {
+            // BOM not found - rewind pointer to start of file.
+            rewind($file);
+        }
+
+        while (($line = fgetcsv($file, 0, ';')) !== false) {
             yield $line;
         }
     }
