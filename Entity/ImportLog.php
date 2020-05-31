@@ -72,7 +72,7 @@ class ImportLog
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -82,7 +82,7 @@ class ImportLog
     /**
      * Get ts
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTs()
     {
@@ -105,7 +105,7 @@ class ImportLog
     /**
      * Get status
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatus()
     {
@@ -128,7 +128,7 @@ class ImportLog
     /**
      * Get message
      *
-     * @return string 
+     * @return string
      */
     public function getMessage()
     {
@@ -158,7 +158,7 @@ class ImportLog
     /**
      * Get line
      *
-     * @return string 
+     * @return string
      */
     public function getLine()
     {
@@ -181,7 +181,7 @@ class ImportLog
     /**
      * Get uploadFile
      *
-     * @return string 
+     * @return string
      */
     public function getUploadFile()
     {

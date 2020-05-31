@@ -73,7 +73,7 @@ class DefaultController extends CRUDController {
             'uploadFile' => $uploadFile->getId()
         ]);
 
-        $data = $em->getRepository('DoctrsSonataImportBundle:ImportLog')->pagerfanta($request);
+        $data = $em->getRepository('DoctrsSonataImportBundle:ImportLog')->pagerfanta($request, $uploadFile);
         $paginator = new Pagerfanta(new DoctrineORMAdapter($data));
         $paginator->setCurrentPage($request->get('page', 1));
 
