@@ -114,7 +114,10 @@
                                         </a>
                                     </div>
 
-                                    {{ pagerfanta(paginator) }}
+                                    <div style="margin-top:16px; margin-bottom:16px">
+                                        {{ pagerfanta(paginator, 'twitter_bootstrap3') }}
+                                    </div>
+
                                     <table class="table">
                                         <tr>
                                             <th>{{ 'upload.table.line'|trans({}, 'DoctrsSonataImportBundle') }}</th>
