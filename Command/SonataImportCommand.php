@@ -73,7 +73,11 @@ class SonataImportCommand extends ContainerAwareCommand {
             $identifier = $meta->getSingleIdentifierFieldName();
             $exportFields = $instance->getExportFields();
             $form = $instance->getFormBuilder();
-            foreach ($fileLoader->getIteration() as $line => $data) {
+
+            $lines = iterator_to_array($fileLoader->getIteration());
+            $header = array_shift($lines);
+
+            foreach ($lines as $line => $data) {
 
                 $log = new ImportLog();
                 $log
@@ -83,8 +87,18 @@ class SonataImportCommand extends ContainerAwareCommand {
 
                 $entity = new $entityClass();
                 $errors = [];
-                foreach ($exportFields as $key => $name) {
-                    $value = isset($data[$key]) ? $data[$key] : '';
+
+                foreach ($data as $index => $value) {
+
+                    $header_name = $header[$index] ?? null;
+                    if ($header_name === null) {
+                        continue;
+                    }
+
+                    $name = $exportFields[$header_name] ?? null;
+                    if ($name === null) {
+                        continue;
+                    }
 
                     /**
                      * В случае если указан ID (первый столбец)
@@ -121,8 +135,8 @@ class SonataImportCommand extends ContainerAwareCommand {
                         $errors[] = $e->getMessage();
                         break;
                     }
-
                 }
+
                 if (!count($errors)) {
                     $validator = $this->getContainer()->get('validator');
                     $errors = $validator->validate($entity);
