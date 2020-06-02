@@ -100,6 +100,15 @@ class SonataImportCommand extends ContainerAwareCommand {
                         continue;
                     }
 
+                    switch ($name) {
+                        case 'categoriesCSV':
+                            $name = 'categories';
+                        break;
+                        case 'crossSalesCSV':
+                            $name = 'cross_sales';
+                        break;
+                    }
+
                     /**
                      * В случае если указан ID (первый столбец)
                      * ищем сущность в базе
