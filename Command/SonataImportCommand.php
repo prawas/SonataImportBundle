@@ -193,14 +193,15 @@ class SonataImportCommand extends ContainerAwareCommand {
     protected function setValue($value, FormBuilderInterface $formBuilder, AbstractAdmin $admin) {
 
         $mappings = $this->getContainer()->getParameter('doctrs_sonata_import.mappings');
-        $type = $formBuilder->getType()->getInnerType()->getBlockPrefix();
+        $type = $formBuilder->getType()->getInnerType();
+        $type_name = method_exists($type, 'getName') ? $type->getName() : $type->getBlockPrefix();
 
         /**
          * Проверяем кастомные типы форм на наличие в конфиге.
          * В случае совпадения, получаем значение из класса, указанного в конфиге
          */
         foreach ($mappings as $item) {
-            if ($item['name'] === $type) {
+            if ($item['name'] === $type_name) {
                 if ($this->getContainer()->has($item['class']) && $this->getContainer()->get($item['class']) instanceof ImportInterface) {
                     /** @var ImportInterface $class */
 
