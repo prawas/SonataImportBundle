@@ -55,6 +55,7 @@ class SonataImportCommand extends ContainerAwareCommand {
             $this->em->flush($uploadFile);
             return;
         }
+
         $fileLoader = new $fileLoader();
         if (!$fileLoader instanceof FileLoaderInterface) {
             $uploadFile->setStatusError('class_loader must be instanceof "FileLoaderInterface"');
@@ -62,8 +63,16 @@ class SonataImportCommand extends ContainerAwareCommand {
             return;
         }
 
+        $fname = $uploadFile->getFile();
+
+        if ($encode === 'cp1251') {
+            $cp1251 = file_get_contents($fname);
+            $utf8 = mb_convert_encoding($cp1251, "utf-8", "windows-1251");
+            file_put_contents($fname, $utf8);
+        }
+
         try {
-            $fileLoader->setFile(new File($uploadFile->getFile()));
+            $fileLoader->setFile(new File($fname));
 
             $pool = $this->getContainer()->get('sonata.admin.pool');
             /** @var AbstractAdmin $instance */
@@ -74,10 +83,14 @@ class SonataImportCommand extends ContainerAwareCommand {
             $exportFields = $instance->getExportFields();
             $form = $instance->getFormBuilder();
 
-            $lines = iterator_to_array($fileLoader->getIteration());
-            $header = array_shift($lines);
+            $header = null;
 
-            foreach ($lines as $line => $data) {
+            foreach ($fileLoader->getIteration() as $line => $data) {
+
+                if ($header === null) {
+                    $header = $data;
+                    continue;
+                }
 
                 $log = new ImportLog();
                 $log
@@ -133,10 +146,11 @@ class SonataImportCommand extends ContainerAwareCommand {
                     /**
                      * Многие делают ошибки в стандартной кодировке,
                      * поэтому на всякий случай провверяем оба варианта написания
+                     *
+                     * if ($encode !== 'utf8' && $encode !== 'utf-8') {
+                     *    $value = iconv($encode, 'utf8//TRANSLIT', $value);
+                     *}
                      */
-                    if ($encode !== 'utf8' && $encode !== 'utf-8') {
-                        $value = iconv($encode, 'utf8//TRANSLIT', $value);
-                    }
                     try {
                         $method = $this->getSetMethod($name);
                         $entity->$method($this->setValue($value, $formBuilder, $instance));
@@ -151,7 +165,10 @@ class SonataImportCommand extends ContainerAwareCommand {
 
                 if (!count($errors)) {
                     $validator = $this->getContainer()->get('validator');
-                    $errors = $validator->validate($entity);
+                    $validation_errors = $validator->validate($entity);
+                    if (count($validation_errors)) {
+                        $errors = [(string) $validation_errors];
+                    }
                 }
 
                 if (!count($errors)) {
