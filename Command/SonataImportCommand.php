@@ -119,29 +119,23 @@ class SonataImportCommand extends ContainerAwareCommand {
                     if ($is_parameter) {
                         $param_id = intval($param_matches[1]);
                         $params = $entity->getParameters();
-                        $found = false;
+                        $class = $this->em->getRepository(ParameterClass::class)->find($param_id);
+                        if ( ! $class) {
+                            throw new \Exception('Класс параметров с id ' . $param_id . ' отсутствует');
+                        }
 
-                        foreach ($params as $param) {
-                            if ($param->getClass()->getId() === $param_id && ! $found) {
-                                $param->setValue($value);
-                                $found = true;
-                            } else
-                            if ($param->getClass()->getId() === $param_id && $found) {
+                        foreach ($params as $i => $param) {
+                            if ($param->getClass()->getId() === $param_id) {
                                 $entity->removeParameter($param);
+                                $this->em->remove($param);
                             }
                         }
 
-                        if ( ! $found) {
-                            $class = $this->em->getRepository(ParameterClass::class)->find($param_id);
-                            if ( ! $class) {
-                                throw new \Exception('Класс параметров с id ' . $param_id . ' отсутствует');
-                            }
-                            $par = (new Parameter())
-                                ->setClass($class)
-                                ->setValue($value)
-                            ;
-                            $entity->addParameter($par);
-                        }
+                        $param = (new Parameter())
+                            ->setClass($class)
+                            ->setValue($value)
+                        ;
+                        $entity->addParameter($param);
 
                         continue;
                     }
