@@ -127,7 +127,7 @@ class SonataImportCommand extends ContainerAwareCommand {
                                 $found = true;
                             } else
                             if ($param->getClass()->getId() === $param_id && $found) {
-                                $this->em->remove($param);
+                                $entity->removeParameter($param);
                             }
                         }
 
