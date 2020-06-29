@@ -122,10 +122,12 @@ class SonataImportCommand extends ContainerAwareCommand {
                         $found = false;
 
                         foreach ($params as $param) {
-                            if ($param->getClass()->getId() === $param_id) {
+                            if ($param->getClass()->getId() === $param_id && ! $found) {
                                 $param->setValue($value);
                                 $found = true;
-                                break;
+                            } else
+                            if ($param->getClass()->getId() === $param_id && $found) {
+                                $this->em->remove($param);
                             }
                         }
 
