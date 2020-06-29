@@ -117,7 +117,7 @@ class SonataImportCommand extends ContainerAwareCommand {
                     $is_parameter = preg_match('/#(\d+):/', $header_name, $param_matches);
 
                     if ($is_parameter) {
-                        $param_id = $param_matches[1];
+                        $param_id = intval($param_matches[1]);
                         $params = $entity->getParameters();
                         $found = false;
 
