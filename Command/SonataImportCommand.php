@@ -19,6 +19,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\File\File;
+use Onest\EshopParamsBundle\Entity\ParameterClass;
+use Onest\EshopParamsBundle\Entity\Parameter;
 
 class SonataImportCommand extends ContainerAwareCommand {
 
@@ -105,6 +107,40 @@ class SonataImportCommand extends ContainerAwareCommand {
 
                     $header_name = $header[$index] ?? null;
                     if ($header_name === null) {
+                        continue;
+                    }
+
+                    /**
+                     * Это параметр?
+                     */
+                    $param_matches = [];
+                    $is_parameter = preg_match('/#(\d+):/', $header_name, $param_matches);
+
+                    if ($is_parameter) {
+                        $param_id = $param_matches[1];
+                        $params = $entity->getParameters();
+                        $found = false;
+
+                        foreach ($params as $param) {
+                            if ($param->getClass()->getId() === $param_id) {
+                                $param->setValue($value);
+                                $found = true;
+                                break;
+                            }
+                        }
+
+                        if ( ! $found) {
+                            $class = $this->em->getRepository(ParameterClass::class)->find($param_id);
+                            if ( ! $class) {
+                                throw new \Exception('Класс параметров с id ' . $param_id . ' отсутствует');
+                            }
+                            $par = (new Parameter())
+                                ->setClass($class)
+                                ->setValue($value)
+                            ;
+                            $entity->addParameter($par);
+                        }
+
                         continue;
                     }
 
