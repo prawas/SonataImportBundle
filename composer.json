@@ -1,10 +1,10 @@
 {
-    "name": "doctrs/sonata-import-bundle",
+    "name": "prawas/sonata-import-bundle",
     "type": "symfony-bundle",
     "license": "MIT",
     "description": "Import bundle to the Sonata Admin Bundle",
     "keywords": ["import", "symfony", "sonata"],
-    "homepage": "https://github.com/Doctrs/SonataImportBundle",
+    "homepage": "https://github.com/prawas/SonataImportBundle",
     "authors": [
         {
             "name": "DOC_tr",
